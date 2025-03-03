@@ -24,6 +24,8 @@ public class Bloc {
 
     String nomBloc;
     long capaciteBloc;
+    long rrc;
+
 
     @ManyToOne(cascade = CascadeType.ALL)
     Foyer foyer;
