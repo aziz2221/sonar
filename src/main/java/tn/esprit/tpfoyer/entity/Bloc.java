@@ -18,6 +18,15 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Bloc {
 
+    public Bloc( String nomBloc, int capaciteBloc, Foyer foyer, Set<Chambre> chambres) {
+
+        this.nomBloc = nomBloc;
+        this.capaciteBloc = capaciteBloc;
+        this.foyer = foyer;
+        this.chambres = chambres;
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long idBloc;
