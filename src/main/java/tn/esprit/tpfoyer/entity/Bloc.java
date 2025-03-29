@@ -45,5 +45,7 @@ public class Bloc {
     Set<Chambre> chambres = new HashSet<Chambre>();
 
 
+    public <E> Bloc(long l, String blocC, int i, Object o, HashSet<E> es) {
+    }
 }
 
