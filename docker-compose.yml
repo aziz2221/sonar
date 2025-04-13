@@ -11,7 +11,7 @@ services:
       - db_data:/var/lib/mysql
 
   app-foyer:
-    image: aziz21a/tp-foyer:2.0.0
+    image: aziz21a/tp-foyer:2.0.34
     container_name: app-foyer
     stdin_open: true
     tty: true
