@@ -1,48 +1,81 @@
-@Test
-@Order(1)
-@Transactional
-@Rollback
-void testAddBloc() {
-    Bloc bloc = new Bloc(0, "Bloc B", 200, null, null); // Changed 0L to 0 and 200L to 200
-    Bloc savedBloc = blocService.addBloc(bloc);
-    assertNotNull(savedBloc);
-    assertTrue(savedBloc.getIdBloc() > 0);
-}
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.annotation.Rollback;
 
-@Test
-@Order(3)
-@Transactional
-@Rollback
-void testRetrieveBlocById() {
-    Bloc bloc = new Bloc(0, "Bloc C", 150, null, null); // Changed 0L to 0 and 150L to 150
-    Bloc savedBloc = blocService.addBloc(bloc);
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+public class BlocServiceImplTest {
 
-    Bloc retrievedBloc = blocService.retrieveBloc(savedBloc.getIdBloc());
-    assertNotNull(retrievedBloc);
-    assertEquals("Bloc C", retrievedBloc.getNomBloc());
-}
+    @Autowired
+    private BlocService blocService;
 
-@Test
-@Order(4)
-@Transactional
-@Rollback
-void testModifyBloc() {
-    Bloc bloc = new Bloc(0, "Bloc D", 300, null, null); // Changed 0L to 0 and 300L to 300
-    Bloc savedBloc = blocService.addBloc(bloc);
-    savedBloc.setCapaciteBloc(400); // Changed 400L to 400
+    @Autowired
+    private BlocRepository blocRepository;
 
-    Bloc updatedBloc = blocService.modifyBloc(savedBloc);
-    assertEquals(400, updatedBloc.getCapaciteBloc()); // Changed 400L to 400
-}
+    @Test
+    @Order(1)
+    @Transactional
+    @Rollback
+    void testAddBloc() {
+        // Creating a new Bloc with adjusted values (0 instead of 0L, 200 instead of 200L)
+        Bloc bloc = new Bloc(0, "Bloc B", 200, null, null);
+        Bloc savedBloc = blocService.addBloc(bloc);
+        
+        assertNotNull(savedBloc);
+        assertTrue(savedBloc.getIdBloc() > 0);  // Ensure ID is generated and > 0
+    }
 
-@Test
-@Order(5)
-@Transactional
-@Rollback
-void testRemoveBloc() {
-    Bloc bloc = new Bloc(0, "Bloc E", 250, null, null); // Changed 0L to 0 and 250L to 250
-    Bloc savedBloc = blocService.addBloc(bloc);
+    @Test
+    @Order(3)
+    @Transactional
+    @Rollback
+    void testRetrieveBlocById() {
+        // Adding Bloc to the repository
+        Bloc bloc = new Bloc(0, "Bloc C", 150, null, null);
+        Bloc savedBloc = blocService.addBloc(bloc);
 
-    blocService.removeBloc(savedBloc.getIdBloc());
-    assertFalse(blocRepository.existsById(savedBloc.getIdBloc()));
+        // Retrieving Bloc by ID and checking if the values match
+        Bloc retrievedBloc = blocService.retrieveBloc(savedBloc.getIdBloc());
+        
+        assertNotNull(retrievedBloc);
+        assertEquals("Bloc C", retrievedBloc.getNomBloc());  // Ensure name matches
+    }
+
+    @Test
+    @Order(4)
+    @Transactional
+    @Rollback
+    void testModifyBloc() {
+        // Adding Bloc to the repository
+        Bloc bloc = new Bloc(0, "Bloc D", 300, null, null);
+        Bloc savedBloc = blocService.addBloc(bloc);
+        
+        // Modifying the Bloc's capacity
+        savedBloc.setCapaciteBloc(400);  // Changed to 400
+        
+        // Saving the updated Bloc and verifying the modification
+        Bloc updatedBloc = blocService.modifyBloc(savedBloc);
+        
+        assertEquals(400, updatedBloc.getCapaciteBloc());  // Ensure capacity is updated to 400
+    }
+
+    @Test
+    @Order(5)
+    @Transactional
+    @Rollback
+    void testRemoveBloc() {
+        // Adding a Bloc to remove
+        Bloc bloc = new Bloc(0, "Bloc E", 250, null, null);
+        Bloc savedBloc = blocService.addBloc(bloc);
+
+        // Removing the Bloc by its ID and ensuring it is deleted
+        blocService.removeBloc(savedBloc.getIdBloc());
+        assertFalse(blocRepository.existsById(savedBloc.getIdBloc()));  // Ensure it no longer exists
+    }
 }
